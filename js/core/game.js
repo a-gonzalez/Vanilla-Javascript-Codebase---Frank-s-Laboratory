@@ -20,11 +20,11 @@ export class Game
     }
 
     initialize()
-    {
+    { // when we first initialize
         this.resize();
 
         window.addEventListener("resize", () =>
-        {
+        { // and we listen everytime the browser is resized
             this.resize();
         });
     }
@@ -32,7 +32,7 @@ export class Game
     resize()
     {
         let width = 0, height = 0;
-        const margin = 5;
+        const margin = 50;
         const available_width = (window.innerWidth - margin) * 2
         const available_height = (window.innerHeight - margin) * 2
 
