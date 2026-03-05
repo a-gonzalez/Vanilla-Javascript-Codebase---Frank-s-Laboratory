@@ -1,0 +1,35 @@
+/* global reset to remove default browser margins and padding, to
+    make sure our game canvas starts with a clean slate
+    and behaves consistently across every browser*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #0000ff;
+    /* to hide any content that spills outside of screen (canvas)
+        also prevents scrollbars from appearing if your canvas
+        or objects move near the edges */
+    overflow: hidden;
+    font-family: "Courier New", monospace;
+    color: #eee; /* white white */
+}
+
+#container {
+    display: flex;
+    height: 100vh;
+    position: relative;
+    justify-content: center; /* horizontal centering */
+    align-items: center; /* vertical centering */
+}
+
+#screen {
+    border: 4px solid #2e2e3e;
+    /* midnight blue */
+    background-color: #1a1a2e;
+    /* to prevent browser from blurring our graphics */
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
