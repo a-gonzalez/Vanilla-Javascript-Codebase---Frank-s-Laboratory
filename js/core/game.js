@@ -1,4 +1,5 @@
 import { GAME_WITDH, GAME_HEIGHT, RATIO } from "./util.js";
+import { Rendering } from "../system/rendering.js";
 /* game.js - the brain of our code base
     will the central orchestrator that initializes all systems
     manages the game-loop
@@ -13,9 +14,14 @@ export class Game
     {
         console.log(this.constructor.name.concat(` @ ${new Date().toLocaleString()}`));
 
+        /* dependency injection of required tool (canvas) to draw on it,
+        and by passing it in rather than having Render grab it directly,
+        we keep our code modular, testable, and flexible.
+        dependency injection is a desigh pattern where an object not 
+        create the tools it needs to work instead those tools are injected (passed)
+        from the outside. */
         this.screen = screen;
-        this.context = screen.getContext("2d");
-        this.x = 0;
+        this.rendering = new Rendering(screen);
 
         this.initialize();
     }
@@ -70,26 +76,10 @@ export class Game
     {// requestAnimationFrame tells the browser
         //console.info(`Looping... ${new Date().toTimeString()}`)
         //console.info(`Looping... ${timestamp / 1000} seconds`)
-        this.render();
+        this.rendering.render();
 
         requestAnimationFrame((timestamp) => this.loop(timestamp)); // to call our game loop right before the next screen repaint
     }// meaning right before the frame gets drawn.
 
-    render()
-    {
-        this.clear();
-
-        this.context.fillStyle = "#ff0000"; // red
-        // let's draw a rectangle - x: 50, y: 50, width: 200, height: 200
-        this.context.fillRect(this.x, 50, 100, 100);
-
-        this.x += 2;
-    }
-
-    clear()
-    {// clearing the canvas every frame is important because
-     // otherwise we would be drawing on previous drawings
-        this.context.fillStyle = "#0f3460";
-        this.context.fillRect(0, 0, GAME_WITDH, GAME_HEIGHT);
-    }
+    
 }
