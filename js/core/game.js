@@ -31,6 +31,7 @@ export class Game
             quickly later without running complex logic or
             loops this.keys = { w: true, a: false -> arrow_up: false arrow_down: false } */
         this.keys = {};
+        this.previous_stamp = 0;
 
         this.initialize();
     }
@@ -43,8 +44,7 @@ export class Game
         { // and we listen everytime the browser is resized
             this.resize();
         });
-        this.setupControl();
-
+        this.setupListeners();
         /* start the game loop - update(), draw() / render()
            requestAnimationFrame automatically adjusts itself to
            the user's screen refresh rate
@@ -53,28 +53,35 @@ export class Game
            since the page started running. Timestamp comes the machine's
            internal clock
         */
-        requestAnimationFrame((timestamp) => this.loop(timestamp));
+        this.previous_stamp = performance.now();
+        requestAnimationFrame((time_stamp) => this.loop(time_stamp));
     }
 
-    update()
+    update(delta_time)
     {
-        this.player.update(this.keys);
+        this.player.update(delta_time, this.keys);
     }
 
-    setupControl()
+    setupListeners()
     {
         window.addEventListener("keydown", (event) =>
         {
             this.keys[event.key.toLowerCase()] = true;
-
-            console.info(this.keys);
         });
 
         window.addEventListener("keyup", (event) =>
         {
             this.keys[event.key.toLowerCase()] = false;
+        });
 
-            console.info(this.keys);
+        window.addEventListener("contextmenu", () =>
+        { // clear all keys when context menu opens
+            this.keys = {};
+        });
+
+        window.addEventListener("blur", () =>
+        { // clear all keys when window loses focus
+            this.keys = {};
         });
     }
 
@@ -104,14 +111,17 @@ export class Game
     }
 
     // we use ES6 arrow function - a modern Javascript syntax that doe not create its own "this" reference,
-    loop(timestamp)// but instead keeps the "this" value from where it was defined. "this" correctly statys bound to our game class
-    {// requestAnimationFrame tells the browser
-        //console.info(`Looping... ${new Date().toTimeString()}`)
-        //console.info(`Looping... ${timestamp / 1000} seconds`)
-        this.update();
+    loop(time_stamp)// but instead keeps the "this" value from where it was defined. "this" correctly statys bound to our game class
+    {// console.info(`Looping... ${timestamp / 1000} seconds`)
+        // delta-time is the amount of time that passed between two animation frames
+        // (16.6 ~ 60 fps) 1000ms / 60 = 16.6ms
+        const delta_time = Math.min((time_stamp - this.previous_stamp) / 1000, 0.1);
+
+        this.previous_stamp = time_stamp;
+        this.update(delta_time);
         this.rendering.render(this.player);
 
-        requestAnimationFrame((timestamp) => this.loop(timestamp)); // to call our game loop right before the next screen repaint
+        requestAnimationFrame((time_stamp) => this.loop(time_stamp)); //requestAnimationFrame tells the browser        to call our game loop right before the next screen repaint
     }// meaning right before the frame gets drawn.
 
     

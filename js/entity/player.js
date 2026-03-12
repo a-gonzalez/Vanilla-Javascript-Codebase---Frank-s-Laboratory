@@ -10,13 +10,13 @@ export default class Player
         this.y = GAME_HEIGHT / 2;
         this.width = 64;
         this.height = 64;
-        this.speed = 5;
+        this.speed = 200; // 200 pixels per movement
 
         // multipliers for upgrades or level progression
         this.speed_multiplier = 1;
     }
 
-    update(keys)
+    update(delta_time, keys)
     { // reset every frame
         let dx = 0, dy = 0
 
@@ -33,8 +33,8 @@ export default class Player
             dx /= length;
             dy /= length;
 
-            this.y += dy * this.speed * this.speed_multiplier;
-            this.x += dx * this.speed * this.speed_multiplier;
+            this.y += dy * this.speed * this.speed_multiplier * delta_time;
+            this.x += dx * this.speed * this.speed_multiplier * delta_time;
         }// keep the player in bounds
         this.x = Math.max(0, Math.min(GAME_WIDTH - this.width, this.x));
         this.y = Math.max(0, Math.min(GAME_HEIGHT - this.height, this.y));
