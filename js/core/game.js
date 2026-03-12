@@ -1,5 +1,6 @@
 import { GAME_WIDTH, GAME_HEIGHT, RATIO } from "./util.js";
-import { Rendering } from "../system/rendering.js";
+import Rendering from "../system/rendering.js";
+import Imaging from "../manager/imaging.js";
 import Player from "../entity/player.js";
 /* game.js - the brain of our code base
     will the central orchestrator that initializes all systems
@@ -9,7 +10,7 @@ import Player from "../entity/player.js";
 
     /* export allows other files to import this Game class using ES6 syntax
         this keeps the code organized and avoids global namespace pollution */
-export class Game
+export default class Game
 { // constructor is a special method that runs once when the class is instantiated, setting up all initial properties
     constructor(screen)
     {
@@ -22,8 +23,9 @@ export class Game
         create the tools it needs to work instead those tools are injected (passed)
         from the outside. */
         this.screen = screen;
-        this.rendering = new Rendering(screen);
+        this.imaging = new Imaging();
         this.player = new Player();
+        this.rendering = null;
 
         /* lookup table
             is a data structure (usually object or an array)
@@ -45,6 +47,9 @@ export class Game
             this.resize();
         });
         this.setupListeners();
+        
+        this.imaging.loadAll();
+        this.rendering = new Rendering(this.screen, this.imaging);
         /* start the game loop - update(), draw() / render()
            requestAnimationFrame automatically adjusts itself to
            the user's screen refresh rate

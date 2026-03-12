@@ -5,15 +5,16 @@ import { GAME_WIDTH, GAME_HEIGHT, TILE_SIZE } from "../core/util.js";
     on the canvas (screen). this strategy helps keep our
     code organized and separate from our game logic
 */
-export class Rendering
+export default class Rendering
 {
-    constructor(screen)
+    constructor(screen, imaging)
     {
         console.info(this.constructor.name.concat(` @ ${new Date().toLocaleString()}`));
 
         this.screen = screen;
         this.context = screen.getContext("2d");
         this.context.imageSmoothingEnabled = false; // prevents browser from blurring graphics
+        this.imaging = imaging;
     }
 
     grid()
@@ -47,10 +48,21 @@ export class Rendering
 
     renderPlayer(player)
     {
-        this.context.fillStyle = "#1a1a2e";
-        this.context.fillRect(player.x, player.y, player.width, player.height);
-        this.context.strokeStyle = "#ffffff";
-        this.context.strokeRect(player.x, player.y, player.width, player.height);
+        const image = this.imaging.get("player");
+
+        if (image)
+        {
+            this.context.drawImage(image.image, player.x, player.y, player.width, player.height);
+            this.context.strokeStyle = "#ffffff";
+            this.context.strokeRect(player.x, player.y, player.width, player.height);
+        }
+        else
+        {
+            this.context.fillStyle = "#1a1a2e";
+            this.context.fillRect(player.x, player.y, player.width, player.height);
+            this.context.strokeStyle = "#ffffff";
+            this.context.strokeRect(player.x, player.y, player.width, player.height);
+        }
     }
 
     clear()

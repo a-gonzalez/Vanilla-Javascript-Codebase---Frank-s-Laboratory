@@ -6,14 +6,15 @@ export default class Player
     {
         console.info(this.constructor.name.concat(` @ ${new Date().toLocaleString()}`));
 
-        this.x = GAME_WIDTH / 2;
-        this.y = GAME_HEIGHT / 2;
         this.width = 64;
         this.height = 64;
-        this.speed = 200; // 200 pixels per movement
+        this.x = (GAME_WIDTH - this.width) / 2;
+        this.y = (GAME_HEIGHT - this.height) / 2;
+        
+        this.speed = 100; // 200 pixels per movement
 
         // multipliers for upgrades or level progression
-        this.speed_multiplier = 1;
+        this.speed_multiplier = 3;
     }
 
     update(delta_time, keys)
