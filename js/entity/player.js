@@ -12,4 +12,24 @@ export default class Player
         this.height = 64;
 
     }
+
+    update(keys)
+    {
+        if (keys['w'] || keys['arrowup'])
+        {
+            --this.y;
+        }
+        else if (keys['s'] || keys['arrowdown'])
+        {
+            ++this.y;
+        }
+        else if (keys['a'] || keys['arrowleft'])
+        {
+            --this.x;
+        }
+        else if (keys['d'] || keys['arrowright'])
+        {
+            ++this.x;
+        }
+    }
 }

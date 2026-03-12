@@ -25,6 +25,13 @@ export class Game
         this.rendering = new Rendering(screen);
         this.player = new Player();
 
+        /* lookup table
+            is a data structure (usually object or an array)
+            use to store information so you can retrieve it 
+            quickly later without running complex logic or
+            loops this.keys = { w: true, a: false -> arrow_up: false arrow_down: false } */
+        this.keys = {};
+
         this.initialize();
     }
 
@@ -36,6 +43,7 @@ export class Game
         { // and we listen everytime the browser is resized
             this.resize();
         });
+        this.setupControl();
 
         /* start the game loop - update(), draw() / render()
            requestAnimationFrame automatically adjusts itself to
@@ -46,6 +54,28 @@ export class Game
            internal clock
         */
         requestAnimationFrame((timestamp) => this.loop(timestamp));
+    }
+
+    update()
+    {
+        this.player.update(this.keys);
+    }
+
+    setupControl()
+    {
+        window.addEventListener("keydown", (event) =>
+        {
+            this.keys[event.key.toLowerCase()] = true;
+
+            console.info(this.keys);
+        });
+
+        window.addEventListener("keyup", (event) =>
+        {
+            this.keys[event.key.toLowerCase()] = false;
+
+            console.info(this.keys);
+        });
     }
 
     resize()
@@ -78,6 +108,7 @@ export class Game
     {// requestAnimationFrame tells the browser
         //console.info(`Looping... ${new Date().toTimeString()}`)
         //console.info(`Looping... ${timestamp / 1000} seconds`)
+        this.update();
         this.rendering.render(this.player);
 
         requestAnimationFrame((timestamp) => this.loop(timestamp)); // to call our game loop right before the next screen repaint

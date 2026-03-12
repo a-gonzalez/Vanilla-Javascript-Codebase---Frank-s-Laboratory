@@ -19,7 +19,7 @@ export class Rendering
     grid()
     {
         this.context.strokeStyle = "rgb(255, 255, 255, 0.5)";
-        this.context.lineWidth = 1;
+        this.context.lineWidth = 0.2;
 
         for (let index = 0; index < GAME_WIDTH; index += TILE_SIZE)
         {
