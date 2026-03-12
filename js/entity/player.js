@@ -10,26 +10,33 @@ export default class Player
         this.y = GAME_HEIGHT / 2;
         this.width = 64;
         this.height = 64;
+        this.speed = 5;
 
+        // multipliers for upgrades or level progression
+        this.speed_multiplier = 1;
     }
 
     update(keys)
-    {
-        if (keys['w'] || keys['arrowup'])
-        {
-            --this.y;
-        }
-        else if (keys['s'] || keys['arrowdown'])
-        {
-            ++this.y;
-        }
-        else if (keys['a'] || keys['arrowleft'])
-        {
-            --this.x;
-        }
-        else if (keys['d'] || keys['arrowright'])
-        {
-            ++this.x;
-        }
+    { // reset every frame
+        let dx = 0, dy = 0
+
+        if (keys['w'] || keys['arrowup']) dy -= 1;
+        if (keys['s'] || keys['arrowdown']) dy += 1;
+        if (keys['a'] || keys['arrowleft']) dx -= 1;
+        if (keys['d'] || keys['arrowright']) dx += 1;
+
+        // normalize diagonal movement
+        if (dx || dy)
+        {// vector - a value with both direction and magnitude
+            const length = Math.sqrt(dx * dx + dy * dy);
+
+            dx /= length;
+            dy /= length;
+
+            this.y += dy * this.speed * this.speed_multiplier;
+            this.x += dx * this.speed * this.speed_multiplier;
+        }// keep the player in bounds
+        this.x = Math.max(0, Math.min(GAME_WIDTH - this.width, this.x));
+        this.y = Math.max(0, Math.min(GAME_HEIGHT - this.height, this.y));
     }
 }
