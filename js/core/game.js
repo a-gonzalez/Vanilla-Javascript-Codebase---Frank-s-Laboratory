@@ -1,5 +1,6 @@
-import { GAME_WITDH, GAME_HEIGHT, RATIO } from "./util.js";
+import { GAME_WIDTH, GAME_HEIGHT, RATIO } from "./util.js";
 import { Rendering } from "../system/rendering.js";
+import Player from "../entity/player.js";
 /* game.js - the brain of our code base
     will the central orchestrator that initializes all systems
     manages the game-loop
@@ -12,7 +13,7 @@ export class Game
 { // constructor is a special method that runs once when the class is instantiated, setting up all initial properties
     constructor(screen)
     {
-        console.log(this.constructor.name.concat(` @ ${new Date().toLocaleString()}`));
+        console.info(this.constructor.name.concat(` @ ${new Date().toLocaleString()}`));
 
         /* dependency injection of required tool (canvas) to draw on it,
         and by passing it in rather than having Render grab it directly,
@@ -22,6 +23,7 @@ export class Game
         from the outside. */
         this.screen = screen;
         this.rendering = new Rendering(screen);
+        this.player = new Player();
 
         this.initialize();
     }
@@ -64,7 +66,7 @@ export class Game
             height = width / RATIO;
         }
 
-        this.screen.width = GAME_WITDH;
+        this.screen.width = GAME_WIDTH;
         this.screen.height = GAME_HEIGHT;
         this.screen.style.width = `${width}px`
         this.screen.style.height = `${height}px`
@@ -76,7 +78,7 @@ export class Game
     {// requestAnimationFrame tells the browser
         //console.info(`Looping... ${new Date().toTimeString()}`)
         //console.info(`Looping... ${timestamp / 1000} seconds`)
-        this.rendering.render();
+        this.rendering.render(this.player);
 
         requestAnimationFrame((timestamp) => this.loop(timestamp)); // to call our game loop right before the next screen repaint
     }// meaning right before the frame gets drawn.

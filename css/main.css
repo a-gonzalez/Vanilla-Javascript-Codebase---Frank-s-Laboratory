@@ -8,7 +8,7 @@
 }
 
 body {
-    background-color: #0000ff;
+    background-color: #1a1a2e;
     /* to hide any content that spills outside of screen (canvas)
         also prevents scrollbars from appearing if your canvas
         or objects move near the edges */

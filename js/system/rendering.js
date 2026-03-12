@@ -1,4 +1,4 @@
-import { GAME_WITDH, GAME_HEIGHT, TILE_SIZE } from "../core/util.js";
+import { GAME_WIDTH, GAME_HEIGHT, TILE_SIZE } from "../core/util.js";
 /*
     this system will encapsulate all rendering logic,
     taking game data and translating it into visuals
@@ -9,7 +9,7 @@ export class Rendering
 {
     constructor(screen)
     {
-        console.log(this.constructor.name.concat(` @ ${new Date().toLocaleString()}`));
+        console.info(this.constructor.name.concat(` @ ${new Date().toLocaleString()}`));
 
         this.screen = screen;
         this.context = screen.getContext("2d");
@@ -21,7 +21,7 @@ export class Rendering
         this.context.strokeStyle = "rgb(255, 255, 255, 0.5)";
         this.context.lineWidth = 1;
 
-        for (let index = 0; index < GAME_WITDH; index += TILE_SIZE)
+        for (let index = 0; index < GAME_WIDTH; index += TILE_SIZE)
         {
             this.context.beginPath();
             this.context.moveTo(index, 0);
@@ -33,21 +33,30 @@ export class Rendering
         {
             this.context.beginPath();
             this.context.moveTo(0, index);
-            this.context.lineTo(GAME_WITDH, index);
+            this.context.lineTo(GAME_WIDTH, index);
             this.context.stroke();
         }
     }
 
-    render()
+    render(player)
     {
         this.clear();
         this.grid();
+        this.renderPlayer(player);
+    }
+
+    renderPlayer(player)
+    {
+        this.context.fillStyle = "#1a1a2e";
+        this.context.fillRect(player.x, player.y, player.width, player.height);
+        this.context.strokeStyle = "#ffffff";
+        this.context.strokeRect(player.x, player.y, player.width, player.height);
     }
 
     clear()
     {// clearing the canvas every frame is important because
      // otherwise we would be drawing on previous drawings
         this.context.fillStyle = "#0f3460";
-        this.context.fillRect(0, 0, GAME_WITDH, GAME_HEIGHT);
+        this.context.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
     }
 }
