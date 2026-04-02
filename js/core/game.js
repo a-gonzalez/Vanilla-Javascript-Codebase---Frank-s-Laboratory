@@ -33,7 +33,7 @@ export default class Game
         { // and we listen everytime the browser is resized
             this.resize();
         });
-        this.setupListeners();
+        this.setupInput();
         this.setUpUI();
 
         /* lookup table
@@ -43,6 +43,7 @@ export default class Game
         loops this.keys = { w: true, a: false -> arrow_up: false arrow_down: false } */
         this.keys = {};
         this.previous_stamp = 0;
+        this.state = "menu";
         this.imaging = new Imaging();
         this.imaging.loadAll();
         this.rendering = new Rendering(this.screen, this.imaging);
@@ -65,6 +66,16 @@ export default class Game
         {
             this.start();
         };
+
+        document.getElementById("btnResume").onclick = () =>
+        {
+            this.resume();
+        };
+
+        document.getElementById("btnQuit").onclick = () =>
+        {
+            this.returnToMenu();
+        };
     }
 
     hidePanels()
@@ -74,19 +85,76 @@ export default class Game
 
     start()
     {
+        this.state = "playing";
         this.hidePanels();
+
+        // reset player position
+        this.player.reset();
+        // this resets the time reference -  if player was on menu for a while, the next frame delta-time calculation could be huge potentionally causing player to "teleport"
+        this.previous_stamp = performance.now();//performance.now() gives us the current high-resolution time-stamp
+    }
+
+    pause()
+    {
+        this.state = "paused";
+
+        document.getElementById("pausemenu").classList.add("active");
+    }
+
+    resume()
+    {
+        this.state = "playing";
+
+        document.getElementById("pausemenu").classList.remove("active");
+    }
+
+    returnToMenu()
+    {
+        this.state = "mainmenu";
+        this.hidePanels();
+
+        document.getElementById("mainmenu").classList.add("active");
     }
 
     update(delta_time)
     {
+        if (this.state !== "playing") return;
         this.player.update(delta_time, this.keys);
     }
 
-    setupListeners()
+    render()
+    {
+        let context = this.screen.getContext("2d");
+
+        if (this.state === "menu")
+        {
+            context.fillStyle = "#0f3460";
+            context.fillRect(0, 0, this.screen.width, this.screen.height);
+        }
+        else
+        {
+            this.rendering.render(this.player);
+        }
+    }
+
+    setupInput()
     {
         window.addEventListener("keydown", (event) =>
         {
             this.keys[event.key.toLowerCase()] = true;
+
+            // ESC toggles pause
+            if (event.key === "Escape")
+            {
+                if (this.state === "playing")
+                {
+                    this.pause();
+                }
+                else if (this.state === "paused")
+                {
+                    this.resume();;
+                }
+            }
         });
 
         window.addEventListener("keyup", (event) =>
@@ -133,13 +201,17 @@ export default class Game
     // we use ES6 arrow function - a modern Javascript syntax that doe not create its own "this" reference,
     loop(time_stamp)// but instead keeps the "this" value from where it was defined. "this" correctly statys bound to our game class
     {// console.info(`Looping... ${timestamp / 1000} seconds`)
+        if (this.previous_stamp === 0)
+        {
+            this.previous_stamp = time_stamp;
+        }
         // delta-time is the amount of time that passed between two animation frames
         // (16.6 ~ 60 fps) 1000ms / 60 = 16.6ms
         const delta_time = Math.min((time_stamp - this.previous_stamp) / 1000, 0.1);
 
         this.previous_stamp = time_stamp;
         this.update(delta_time);
-        this.rendering.render(this.player);
+        this.render();
 
         requestAnimationFrame((time_stamp) => this.loop(time_stamp)); //requestAnimationFrame tells the browser        to call our game loop right before the next screen repaint
     }// meaning right before the frame gets drawn.

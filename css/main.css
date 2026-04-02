@@ -37,7 +37,7 @@ body {
 .ui-panel
 {
     position: absolute;
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(10px);
     border: 3px solid #4a9eff;
     padding: 30px;
@@ -50,7 +50,7 @@ body {
 
 .ui-panel.active
 {
-    display: block;
+    display: inline;
 }
 
 .ui-panel h1
@@ -58,6 +58,14 @@ body {
     color: #4a9eff;
     margin-bottom: 20px;
     font-size: 40px;
+    text-shadow: 0 0 20px rgba(74, 157, 255, 0.5);
+}
+
+.ui-panel h2
+{
+    color: #4a9eff;
+    margin-bottom: 20px;
+    font-size: 35px;
     text-shadow: 0 0 20px rgba(74, 157, 255, 0.5);
 }
 

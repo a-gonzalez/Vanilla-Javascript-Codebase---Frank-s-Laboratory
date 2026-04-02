@@ -8,14 +8,22 @@ export default class Player
 
         this.width = 32;
         this.height = 32;
-        this.x = (GAME_WIDTH - this.width) / 2;
-        this.y = (GAME_HEIGHT - this.height) / 2;
+        
         
         this.speed = 100; // x pixels per movement
 
         // multipliers for upgrades or level progression
         this.speed_multiplier = 3;
         this.scale = 2;
+
+        this.reset();
+    }
+
+    reset()
+    {
+        this.x = (GAME_WIDTH - this.width) / 2;
+        this.y = (GAME_HEIGHT - this.height) / 2;
+        this.speed_multiplier = 1;
     }
 
     update(delta_time, keys)
