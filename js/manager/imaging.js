@@ -25,7 +25,7 @@ export default class Imaging
 
         image.onerror = () =>
         {
-            console.error(`Image ${name} failed!`);
+            console.error(`Image "${name}" failed!`);
         }
     }
 

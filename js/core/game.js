@@ -23,19 +23,6 @@ export default class Game
         create the tools it needs to work instead those tools are injected (passed)
         from the outside. */
         this.screen = screen;
-        this.imaging = new Imaging();
-        this.player = new Player();
-        this.rendering = null;
-
-        /* lookup table
-            is a data structure (usually object or an array)
-            use to store information so you can retrieve it 
-            quickly later without running complex logic or
-            loops this.keys = { w: true, a: false -> arrow_up: false arrow_down: false } */
-        this.keys = {};
-        this.previous_stamp = 0;
-
-        this.initialize();
     }
 
     initialize()
@@ -47,9 +34,19 @@ export default class Game
             this.resize();
         });
         this.setupListeners();
-        
+        this.setUpUI();
+
+        /* lookup table
+        is a data structure (usually object or an array)
+        use to store information so you can retrieve it 
+        quickly later without running complex logic or
+        loops this.keys = { w: true, a: false -> arrow_up: false arrow_down: false } */
+        this.keys = {};
+        this.previous_stamp = 0;
+        this.imaging = new Imaging();
         this.imaging.loadAll();
         this.rendering = new Rendering(this.screen, this.imaging);
+        this.player = new Player();
         /* start the game loop - update(), draw() / render()
            requestAnimationFrame automatically adjusts itself to
            the user's screen refresh rate
@@ -60,6 +57,24 @@ export default class Game
         */
         this.previous_stamp = performance.now();
         requestAnimationFrame((time_stamp) => this.loop(time_stamp));
+    }
+
+    setUpUI()
+    {
+        document.getElementById("btnPlay").onclick = () =>
+        {
+            this.start();
+        };
+    }
+
+    hidePanels()
+    {// remove "active" class which makes panel visible
+        document.querySelectorAll(".ui-panel").forEach(p => p.classList.remove("active"));
+    }
+
+    start()
+    {
+        this.hidePanels();
     }
 
     update(delta_time)
@@ -93,7 +108,7 @@ export default class Game
     resize()
     {
         let width = 0, height = 0;
-        const margin = 15;
+        const margin = 10;
         const available_width = window.innerWidth - margin * 2
         const available_height = window.innerHeight - margin * 2
 

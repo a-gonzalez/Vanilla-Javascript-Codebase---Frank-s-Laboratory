@@ -19,24 +19,23 @@ export default class Rendering
 
     grid()
     {
-        this.context.strokeStyle = "rgb(255, 255, 255, 0.5)";
-        this.context.lineWidth = 0.2;
+        this.context.strokeStyle = "rgb(255, 255, 255, 0.2)";
+        this.context.lineWidth = 1;
+        this.context.beginPath();
 
         for (let index = 0; index < GAME_WIDTH; index += TILE_SIZE)
         {
-            this.context.beginPath();
             this.context.moveTo(index, 0);
             this.context.lineTo(index, GAME_HEIGHT);
-            this.context.stroke();
         }
 
         for (let index = 0; index < GAME_HEIGHT; index += TILE_SIZE)
         {
-            this.context.beginPath();
+            //this.context.beginPath();
             this.context.moveTo(0, index);
             this.context.lineTo(GAME_WIDTH, index);
-            this.context.stroke();
         }
+        this.context.stroke();
     }
 
     render(player)
@@ -52,16 +51,18 @@ export default class Rendering
 
         if (image)
         {
-            this.context.drawImage(image.image, player.x, player.y, player.width, player.height);
-            this.context.strokeStyle = "#ffffff";
-            this.context.strokeRect(player.x, player.y, player.width, player.height);
+            this.context.drawImage(image.image, player.x, player.y, player.width * player.scale, player.height * player.scale);
+            this.context.lineWidth = 0.5;
+            this.context.strokeStyle = "#ffd800";  // school-bus yellow "#ffd800"
+            this.context.strokeRect(player.x, player.y, player.width * player.scale, player.height * player.scale);
         }
         else
         {
             this.context.fillStyle = "#1a1a2e";
-            this.context.fillRect(player.x, player.y, player.width, player.height);
-            this.context.strokeStyle = "#ffffff";
-            this.context.strokeRect(player.x, player.y, player.width, player.height);
+            this.context.fillRect(player.x, player.y, player.width * player.scale, player.height * player.scale);
+            this.context.strokeStyle = "#ffd800";
+            this.context.lineWidth = 0.5;
+            this.context.strokeRect(player.x, player.y, player.width * player.scale, player.height * player.scale);
         }
     }
 

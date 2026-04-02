@@ -6,15 +6,16 @@ export default class Player
     {
         console.info(this.constructor.name.concat(` @ ${new Date().toLocaleString()}`));
 
-        this.width = 64;
-        this.height = 64;
+        this.width = 32;
+        this.height = 32;
         this.x = (GAME_WIDTH - this.width) / 2;
         this.y = (GAME_HEIGHT - this.height) / 2;
         
-        this.speed = 100; // 200 pixels per movement
+        this.speed = 100; // x pixels per movement
 
         // multipliers for upgrades or level progression
         this.speed_multiplier = 3;
+        this.scale = 2;
     }
 
     update(delta_time, keys)
@@ -37,7 +38,7 @@ export default class Player
             this.y += dy * this.speed * this.speed_multiplier * delta_time;
             this.x += dx * this.speed * this.speed_multiplier * delta_time;
         }// keep the player in bounds
-        this.x = Math.max(0, Math.min(GAME_WIDTH - this.width, this.x));
-        this.y = Math.max(0, Math.min(GAME_HEIGHT - this.height, this.y));
+        this.x = Math.max(0, Math.min(GAME_WIDTH - this.width * this.scale, this.x));
+        this.y = Math.max(0, Math.min(GAME_HEIGHT - this.height * this.scale, this.y));
     }
 }
