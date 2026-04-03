@@ -23,10 +23,21 @@ export default class Game
         create the tools it needs to work instead those tools are injected (passed)
         from the outside. */
         this.screen = screen;
+        this.keys = {};
+        this.previous_stamp = 0;
+        this.state = "menu";
+        this.imaging = new Imaging();
+        this.rendering = new Rendering(this.screen, this.imaging);
+        this.player = new Player();
     }
 
-    initialize()
+    async initialize()
     { // when we first initialize
+        await Promise.all([//Promise.all([]) takes an array of Promises and waits for all of them to complete in parallel
+            this.imaging.loadAll()
+        ]);
+        document.getElementById("loading").classList.remove("active");
+
         this.resize();
 
         window.addEventListener("resize", () =>
@@ -41,13 +52,7 @@ export default class Game
         use to store information so you can retrieve it 
         quickly later without running complex logic or
         loops this.keys = { w: true, a: false -> arrow_up: false arrow_down: false } */
-        this.keys = {};
-        this.previous_stamp = 0;
-        this.state = "menu";
-        this.imaging = new Imaging();
-        this.imaging.loadAll();
-        this.rendering = new Rendering(this.screen, this.imaging);
-        this.player = new Player();
+        
         /* start the game loop - update(), draw() / render()
            requestAnimationFrame automatically adjusts itself to
            the user's screen refresh rate
