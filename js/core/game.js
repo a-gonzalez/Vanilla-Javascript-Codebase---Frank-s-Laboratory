@@ -1,6 +1,6 @@
 import { GAME_WIDTH, GAME_HEIGHT, RATIO } from "./util.js";
 import Rendering from "../system/rendering.js";
-import GManager from "../manager/IManager.js";
+import IManager from "../manager/IManager.js";
 import AManager from "../manager/AManager.js";
 import Player from "../entity/player.js";
 /* game.js - the brain of our code base
@@ -27,7 +27,7 @@ export default class Game
         this.keys = {};
         this.previous_stamp = 0;
         this.state = "menu";
-        this.IManager = new GManager();
+        this.IManager = new IManager();
         this.AManager = new AManager();
         this.rendering = new Rendering(this.screen, this.IManager);
         this.player = new Player();
@@ -36,7 +36,8 @@ export default class Game
     async initialize()
     { // when we first initialize
         await Promise.all([//Promise.all([]) takes an array of Promises and waits for all of them to complete in parallel
-            this.IManager.loadAll()
+            this.IManager.loadAll(),
+            this.AManager.loadAll()
         ]);
         document.getElementById("loading").classList.remove("active");
         document.getElementById("mainmenu").classList.add("active");
@@ -84,6 +85,11 @@ export default class Game
         {
             this.returnToMenu();
         };
+
+        document.querySelectorAll("button").forEach(btn =>
+            {
+                btn.onmouseover = () => this.AManager.play("hover");
+            });
     }
 
     hidePanels()
@@ -100,6 +106,8 @@ export default class Game
         this.player.reset();
         // this resets the time reference -  if player was on menu for a while, the next frame delta-time calculation could be huge potentionally causing player to "teleport"
         this.previous_stamp = performance.now();//performance.now() gives us the current high-resolution time-stamp
+
+        this.AManager.play("click");
     }
 
     pause()
@@ -107,6 +115,8 @@ export default class Game
         this.state = "paused";
 
         document.getElementById("pausemenu").classList.add("active");
+
+        this.AManager.play("pause");
     }
 
     resume()
@@ -114,6 +124,8 @@ export default class Game
         this.state = "playing";
 
         document.getElementById("pausemenu").classList.remove("active");
+
+        this.AManager.play("unpause");
     }
 
     returnToMenu()
