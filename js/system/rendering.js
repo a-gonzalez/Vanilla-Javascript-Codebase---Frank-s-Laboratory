@@ -7,14 +7,14 @@ import { GAME_WIDTH, GAME_HEIGHT, TILE_SIZE } from "../core/util.js";
 */
 export default class Rendering
 {
-    constructor(screen, imaging)
+    constructor(screen, IManager)
     {
         console.info(this.constructor.name.concat(` @ ${new Date().toLocaleString()}`));
 
         this.screen = screen;
         this.context = screen.getContext("2d");
         this.context.imageSmoothingEnabled = false; // prevents browser from blurring graphics
-        this.imaging = imaging;
+        this.IManager = IManager;
     }
 
     grid()
@@ -47,7 +47,7 @@ export default class Rendering
 
     renderPlayer(player)
     {
-        const image = this.imaging.get("player");
+        const image = this.IManager.get("player");
 
         if (image)
         {

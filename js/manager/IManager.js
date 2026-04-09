@@ -1,6 +1,6 @@
-// imaging will load, cache and provide access
-// to all image assets in our game
-export default class Imaging
+// graphics-manager will load, cache and provide access
+// to all graphic assets in our game
+export default class GManager
 {
     constructor()
     {
@@ -41,9 +41,10 @@ export default class Imaging
     async loadAll()// marking the function async allows me to use await inside it and makes loadAll() return a Promise that my Game class can also await
     {// Because some tasks (like fetching data from a server or loading an image) take time
         await Promise.all([ // javascript uses Promises to manage that waiting period without
-            this.load("player", "/assets/img/player.png") // freezing your entire program
+            this.load("player", "./assets/img/player.png") // freezing your entire program
         ]);// the await keyword pauses execution until Promise.all() completes
-        
+        // Testing - simulate slow asset loading
+        await new Promise(resolve => setTimeout(resolve, 2000));
     }
 
     get(name)

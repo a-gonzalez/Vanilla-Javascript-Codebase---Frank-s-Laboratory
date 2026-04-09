@@ -48,9 +48,14 @@ body {
     display: none;
 }
 
+#loading
+{
+    padding: 50px;
+}
+
 .ui-panel.active
 {
-    display: inline;
+    display: block;
 }
 
 .ui-panel h1

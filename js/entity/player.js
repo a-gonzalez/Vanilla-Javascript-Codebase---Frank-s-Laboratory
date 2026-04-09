@@ -23,7 +23,7 @@ export default class Player
     {
         this.x = (GAME_WIDTH - this.width) / 2;
         this.y = (GAME_HEIGHT - this.height) / 2;
-        this.speed_multiplier = 1;
+        this.speed_multiplier = 3;
     }
 
     update(delta_time, keys)

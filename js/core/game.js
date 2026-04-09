@@ -1,6 +1,7 @@
 import { GAME_WIDTH, GAME_HEIGHT, RATIO } from "./util.js";
 import Rendering from "../system/rendering.js";
-import Imaging from "../manager/imaging.js";
+import GManager from "../manager/IManager.js";
+import AManager from "../manager/AManager.js";
 import Player from "../entity/player.js";
 /* game.js - the brain of our code base
     will the central orchestrator that initializes all systems
@@ -26,17 +27,19 @@ export default class Game
         this.keys = {};
         this.previous_stamp = 0;
         this.state = "menu";
-        this.imaging = new Imaging();
-        this.rendering = new Rendering(this.screen, this.imaging);
+        this.IManager = new GManager();
+        this.AManager = new AManager();
+        this.rendering = new Rendering(this.screen, this.IManager);
         this.player = new Player();
     }
 
     async initialize()
     { // when we first initialize
         await Promise.all([//Promise.all([]) takes an array of Promises and waits for all of them to complete in parallel
-            this.imaging.loadAll()
+            this.IManager.loadAll()
         ]);
         document.getElementById("loading").classList.remove("active");
+        document.getElementById("mainmenu").classList.add("active");
 
         this.resize();
 
