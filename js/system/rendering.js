@@ -38,11 +38,18 @@ export default class Rendering
         this.context.stroke();
     }
 
-    render(player)
+    render(state, player)
     {
-        this.clear();
-        this.grid();
-        this.renderPlayer(player);
+        if (state === "menu")
+        {
+            this.renderMenuBackground();
+        }
+        else
+        {
+            this.clear();
+            this.grid();
+            this.renderPlayer(player);
+        }
     }
 
     renderPlayer(player)
@@ -66,9 +73,15 @@ export default class Rendering
         }
     }
 
+    renderMenuBackground()
+    {
+        this.context.fillStyle = "#0f3460";
+        this.context.fillRect(0, 0, this.screen.width, this.screen.height);
+    }
+
     clear()
     {// clearing the canvas every frame is important because
-     // otherwise we would be drawing on previous drawings
+     // otherwise we would be drawing on previous animations / drawings
         this.context.fillStyle = "#0f3460";
         this.context.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
     }

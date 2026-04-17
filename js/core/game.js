@@ -142,7 +142,7 @@ export default class Game
         this.player.update(delta_time, this.keys);
     }
 
-    render()
+    /*render()
     {
         let context = this.screen.getContext("2d");
 
@@ -155,7 +155,7 @@ export default class Game
         {
             this.rendering.render(this.player);
         }
-    }
+    }*/
 
     setupInput()
     {
@@ -231,10 +231,8 @@ export default class Game
 
         this.previous_stamp = time_stamp;
         this.update(delta_time);
-        this.render();
+        this.rendering.render(this.state, this.player);
 
         requestAnimationFrame((time_stamp) => this.loop(time_stamp)); //requestAnimationFrame tells the browser        to call our game loop right before the next screen repaint
     }// meaning right before the frame gets drawn.
-
-    
 }
